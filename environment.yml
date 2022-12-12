@@ -1,0 +1,10 @@
+name: multimeter
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pyvisa
+  - pyqt
+  - pyqtgraph=0.13.1
+  - pandas

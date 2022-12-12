@@ -1,0 +1,85 @@
+QWidget {
+	color: black;
+	background: white;
+    font-size: 14px;
+    outline: none;
+}
+
+QLabel{
+    font-weight: bold;
+	padding: 0px;
+	margin: 0px;
+	max-height: 25px;
+}
+
+QPushButton {
+    background: #aaa;
+    color: black;
+    min-width: 150px;
+    max-width: 200px;
+    min-height: 30px;
+    max-height: 30px;
+    border: 2px solid gray;
+    border-radius: 5px;
+    padding: 0px;
+}
+
+QPushButton:hover {
+    color: white;
+}
+QPushButton:pressed {
+    background: qradialgradient(
+        cx:0.5, cy:0.5, fx:0.5, fy:0.5,
+        radius: 0.8,
+        stop: 0 gray,
+        stop: 1 white
+    );
+	border: 2px solid gray;
+}
+
+QTabBar::tab{
+    padding: 5px;
+    border: 5px black;
+    border-top-right-radius: 10px;
+    min-width: 50px;
+}
+
+QTabBar::tab:selected{
+    background-color: #ccf;
+}
+
+QTabBar::tab:!selected{
+    background-color: #aaa;
+}
+
+QTabBar::tab:hover{
+   color: white;
+}
+
+QPlainTextEdit {
+    background-color: black;
+    font-size: 12px;
+    font-family: "Lucida Sans Unicode";
+}
+
+QLineEdit {
+    font-weight: bold;
+    min-height: 25px;
+    color: #337;
+}
+
+QComboBox {
+    font-weight: bold;
+    min-height: 25px;
+    max-height: 25px;
+}
+
+QSpinBox {
+    font-weight: bold;
+    color: #337;
+    padding-right: 10px;
+    min-height: 25px;
+    max-height: 25px;
+    min-width: 50px;
+    max-width: 100px;
+}
