@@ -5,6 +5,7 @@ from PyQt5.QtCore import pyqtSignal, pyqtSlot, Qt, QThread, QMetaObject, Q_ARG, 
 from widgets.pg_widgets import GraphWidget
 from widgets.detachable_widgets import DetachableTabWidget
 from widgets.debug_widgets import CommunicationWidget, LoggerWidget
+from widgets.output_widget import OutputWidget
 
 import sys
 import logging
@@ -13,7 +14,13 @@ from pathlib import Path
 from multimeter.multimeter_qapi import MultimeterQObject
 
 
-STYLESHEET_PATH = str(Path(__file__).absolute().parent/"settings"/"style.css")
+BASE_DIR = Path(__file__).absolute().parent
+LOG_PATH = BASE_DIR/"logs"
+STYLESHEET_PATH = BASE_DIR/"settings"/"style.css"
+
+
+def convert(value):
+    return value * 2
 
 
 class MainWindow(QMainWindow):
@@ -34,6 +41,9 @@ class MainWindow(QMainWindow):
         self.tab_widget.addTab(self.trend_widget, "Trend")
         self.tab_widget.addTab(self.com_widget, "Communication")
         self.tab_widget.addTab(self.logger_widget, "Logs")
+
+        # output widget
+        self.output_widget = OutputWidget(default_filename=str(LOG_PATH/"output.csv"))
 
         # polling layout
         self.start_stop_btn = QPushButton(u"\U0001F7E2 Start")
@@ -56,6 +66,7 @@ class MainWindow(QMainWindow):
 
         # central layout
         self.central_layout = QVBoxLayout()
+        self.central_layout.addWidget(self.output_widget)
         self.central_layout.addLayout(self.polling_layout)
         self.central_layout.addWidget(self.tab_widget)
         self.central_widget = QWidget()
@@ -104,13 +115,13 @@ class MainWindow(QMainWindow):
     def on_update_plots_sig(self, timestamp, value):
         self.trend_widget.plot.update_ups(timestamp)
         self.trend_widget.plot.add_curve_data({"Reading": [timestamp, value]})
-        self.trend_widget.plot.add_curve_data({"Converted": [timestamp, value*2 + 5]})
+        self.trend_widget.plot.add_curve_data({"Converted": [timestamp, convert(value)]})
         self.reading_value_label.setText(f"{value:.6g}")
 
     @staticmethod
     def read_style_sheet(filename):
         css = ""
-        with open(filename, "r") as file:
+        with open(str(filename), "r") as file:
             css = str(file.read())
         return css
 

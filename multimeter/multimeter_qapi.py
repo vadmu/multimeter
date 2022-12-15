@@ -3,7 +3,7 @@ import logging
 import traceback
 from time import time
 from random import random
-from multimeter.visa_interface import VISAInterface
+from multimeter.visa_interface import VISAInterface, INSTRUMENT_ADDRESS
 
 
 class MultimeterQObject(QObject):
@@ -18,7 +18,7 @@ class MultimeterQObject(QObject):
         self.logger = logging.getLogger("Multimeter")
         try:
             self.interface = VISAInterface(
-                address='USB0::0x0957::0x0607::MY47001094::0::INSTR',
+                address=INSTRUMENT_ADDRESS,
                 logger_name="Keysight 34410A"
             )
         except ConnectionError:

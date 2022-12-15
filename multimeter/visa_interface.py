@@ -3,6 +3,7 @@ import logging
 
 
 TIMEOUT_IN_SECONDS = 5
+INSTRUMENT_ADDRESS = 'USB0::0x0957::0x0607::MY47001094::0::INSTR'
 
 
 class VISAInterface:
@@ -40,3 +41,21 @@ class VISAInterface:
         if self.inst:
             self.inst.close()
             self.logger.info(f"VISA interface {self.address} disconnected.")
+
+
+if __name__ == "__main__":
+    logging.basicConfig(
+        format='%(asctime)s - %(name)6s - %(levelname)5s - %(message)s', level=logging.DEBUG
+    )
+    try:
+        multimeter = VISAInterface(
+            address=INSTRUMENT_ADDRESS,
+            logger_name="Keysight 34410A"
+        )
+        multimeter.talk("*IDN?")
+    except ConnectionError:
+        logging.error(
+            "Something wrong with the connection. "
+            "Please, check if the device is on, "
+            "is set to remote control and the address is correct"
+        )
