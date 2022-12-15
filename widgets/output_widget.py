@@ -21,11 +21,15 @@ class OutputWidget(QWidget):
         self.layout.addWidget(self.file_lineedit)
         self.layout.addWidget(self.file_select_button)
 
-        self.writing_enabled = True
         self.file_select_button.clicked.connect(self.select_file)
         self.switch.stateChanged.connect(self.on_value_changed)
-        self.file_lineedit.textChanged.connect(self.on_text_changed)
+        self.file_lineedit.editingFinished.connect(self.on_text_changed)
+        self.writing_enabled = True
+
+    @pyqtSlot()
+    def post_init(self):
         self.SIG_SET_FILENAME.emit(self.filename)
+        self.SIG_ENABLE_WRITING.emit(self.writing_enabled)
 
     @pyqtSlot()
     def select_file(self):
@@ -33,7 +37,8 @@ class OutputWidget(QWidget):
             QFileDialog.getSaveFileName(
                 self,
                 caption='Select File',
-                filter="Data files (*.csv *.xlsx *.dat *.txt)"
+                filter="Data files (*.csv *.xlsx *.dat *.txt)",
+                options=QFileDialog.DontConfirmOverwrite
             )[0]
         )
         if filename:
@@ -45,7 +50,7 @@ class OutputWidget(QWidget):
     def on_value_changed(self):
         self.SIG_ENABLE_WRITING.emit(self.switch.isChecked())
     
-    @pyqtSlot(str)
-    def on_text_changed(self, filename):
-        self.filename = str(filename)
+    @pyqtSlot()
+    def on_text_changed(self):
+        self.filename = str(self.file_lineedit.text())
         self.SIG_SET_FILENAME.emit(self.filename)

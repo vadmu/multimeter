@@ -18,7 +18,7 @@ class CommunicationWidget(QWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.user_text_input = QLineEdit()
-        self.user_text_input.setPlaceholderText("Command to send. Example: DAC GET ALL 1 or ADC GET CH 21 1")
+        self.user_text_input.setPlaceholderText("Command to send. Examples: *IDN?, *CLS, READ? CONF:VOLT, CONF:RES")
         self.user_text_input.returnPressed.connect(self.send_cmd)
         self.btn_send = QPushButton("Send")
         self.btn_send.setObjectName("Operation")

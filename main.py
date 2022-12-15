@@ -43,7 +43,7 @@ class MainWindow(QMainWindow):
         self.tab_widget.addTab(self.logger_widget, "Logs")
 
         # output widget
-        self.output_widget = OutputWidget(default_filename=str(LOG_PATH/"output.csv"))
+        self.output_widget = OutputWidget(default_filename=str(LOG_PATH/"output.xlsx"))
 
         # polling layout
         self.start_stop_btn = QPushButton(u"\U0001F7E2 Start")
@@ -80,14 +80,19 @@ class MainWindow(QMainWindow):
         self.api_thread = QThread()
         self.api_worker = MultimeterQObject()
         self.api_worker.moveToThread(self.api_thread)
-        QMetaObject.invokeMethod(self.api_thread, 'start', Qt.QueuedConnection)
-
+   
         # connections
         self.api_worker.SIG_UPDATE_PLOTS.connect(self.on_update_plots_sig)
         self.api_worker.SIG_RAW_CMD_REPLY.connect(self.com_widget.on_reply_received)
         self.com_widget.SIG_RAW_CMD_SEND.connect(self.api_worker.send_raw_cmd)
         self.start_stop_btn.clicked.connect(self.on_start_stop_pressed)
         self.polling_timer_box.valueChanged.connect(self.on_polling_changed)
+        self.output_widget.SIG_SET_FILENAME.connect(self.api_worker.set_filename)
+        self.output_widget.SIG_ENABLE_WRITING.connect(self.api_worker.enable_writing)
+        self.api_thread.started.connect(self.output_widget.post_init)
+
+        # start the thread
+        QMetaObject.invokeMethod(self.api_thread, 'start', Qt.QueuedConnection)
 
         # status
         self.is_polling = False
