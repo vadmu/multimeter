@@ -20,6 +20,7 @@ STYLESHEET_PATH = BASE_DIR/"settings"/"style.css"
 
 
 def convert(value):
+    """Function that converts volts to temperature."""
     return value * 2
 
 
